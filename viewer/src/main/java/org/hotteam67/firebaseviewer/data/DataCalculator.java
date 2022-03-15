@@ -39,6 +39,13 @@ class DataCalculator implements Serializable {
     private final String teamNamesJson;
     private final List<Integer> calculatedColumnIndices;
 
+    private enum columnType {
+        UNKNOWN,
+        NUMERIC,
+        STRING,
+        BOOLEAN
+    }
+
     /**
      * The calculation types that are available
      */
@@ -77,16 +84,13 @@ class DataCalculator implements Serializable {
         columnsNames = rawData.GetColumnNames();
         this.teamRanksJson = teamRanks.toString();
         calculatedColumnIndices = new ArrayList<>();
-        for (int i = 0; i < calculatedColumns.size(); ++i)
-        {
+        for (int i = 0; i < calculatedColumns.size(); ++i) {
             try {
                 if (columnsNames.contains(columnIndices.get(i)))
                     calculatedColumnIndices.add(columnsNames.indexOf(columnIndices.get(i)));
                 else
                     calculatedColumnIndices.add(-1);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Constants.Log(e);
                 calculatedColumnIndices.add(-1);
             }
@@ -103,38 +107,35 @@ class DataCalculator implements Serializable {
      * Setup the calculated columns and actually run the calculations here
      * @param calculatedColumns list of the calculated column names to use
      */
-    private void SetupCalculatedColumns(List<String> calculatedColumns)
-    {
-        List<ColumnHeaderModel> calcColumnHeaders = new ArrayList<>();
-        List<List<CellModel>> calcCells = new ArrayList<>();
-        List<RowHeaderModel> calcRowHeaders = new ArrayList<>();
+    private void SetupCalculatedColumns(List<String> calculatedColumns) {
+        List<ColumnHeaderModel> calcColumnHeaders = new ArrayList<>(); // The headers for the calculated columns
+        List<List<CellModel>> calcCells = new ArrayList<>(); // The cells for the calculated columns
+        List<RowHeaderModel> calcRowHeaders = new ArrayList<>(); // The headers for the calculated rows
 
-        List<RowHeaderModel> rawRowHeaders = rawDataTable.GetRowHeaders();
-        List<List<CellModel>> rawRows = rawDataTable.GetCells();
+        List<RowHeaderModel> rawRowHeaders = rawDataTable.GetRowHeaders(); // Get the raw row headers
+        List<List<CellModel>> rawRows = rawDataTable.GetCells(); // Get the raw cells
 
         /*
         Load calculated column names
          */
-        for (String s : calculatedColumns)
-        {
-            calcColumnHeaders.add(new ColumnHeaderModel(s));
+        for (String s : calculatedColumns) {
+            calcColumnHeaders.add(new ColumnHeaderModel(s)); // Add the calculated column name
         }
 
         /*
         Load every unique team number
          */
         List<String> teamNumbers = new ArrayList<>();
-        HashMap<String, List<List<CellModel>>> teamRows = new HashMap<>();
+        HashMap<String, List<List<CellModel>>> teamRows = new HashMap<>(); // key: team number, value: list of rows
 
         Log.d("HotTeam67", "Finding unique teams from rowheader of size: " + rawRowHeaders.size());
         int i = 0;
-        for (RowHeaderModel row : rawRowHeaders)
-        {
+        for (RowHeaderModel row : rawRowHeaders) { // For each row header
             try {
                 String teamNumber = row.getData();
                 // Already seen, add to existing list for team
-                if (teamRows.containsKey(teamNumber))
-                    teamRows.get(teamNumber).add(rawRows.get(i));
+                if (teamRows.containsKey(teamNumber)) // If the team number is already in the map
+                    teamRows.get(teamNumber).add(rawRows.get(i)); // Add the row to the list of rows for that team
                 // Newly seen team, make a new list of matches for them
                 else {
                     teamNumbers.add(teamNumber);
@@ -142,9 +143,7 @@ class DataCalculator implements Serializable {
                     rows.add(rawRows.get(i));
                     teamRows.put(teamNumber, rows);
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Constants.Log(e);
             }
             ++i;
@@ -154,14 +153,12 @@ class DataCalculator implements Serializable {
         Create a calculated row for each teamNumber using each of the stored matches
          */
         int current_row = 0;
-        for (String teamNumber : teamNumbers)
-        {
+        for (String teamNumber : teamNumbers) {
             // Get all matches for team number
             List<List<CellModel>> matches = teamRows.get(teamNumber);
 
             List<CellModel> row = new ArrayList<>();
-            for (int column : calculatedColumnIndices)
-            {
+            for (int column : calculatedColumnIndices) {
                 if (column == -1) {
                     row.add(new CellModel("0_0", "N/A", teamNumber));
                     continue;
@@ -169,13 +166,12 @@ class DataCalculator implements Serializable {
 
                 List<String> values = new ArrayList<>();
                 // Get raw data collection
-                for (List<CellModel> s : matches)
-                {
+                for (List<CellModel> s : matches) {
                     values.add(s.get(column).getData());
                 }
 
                 // Calculate
-                String value = String.valueOf(doCalculatedColumn(columnsNames.get(column), values, calculationType));
+                String value = doCalculatedColumn(columnsNames.get(column), values, calculationType);
 
                 // Add cell to row
                 row.add(new CellModel(current_row + "_" + column, value, teamNumber));
@@ -260,67 +256,142 @@ class DataCalculator implements Serializable {
      * @param calculation the type of calculation to run
      * @return a double representing your final value
      */
-    private static double doCalculatedColumn(String columnName, List<String> columnValues,
-                                             int calculation)
-    {
-        switch (calculation)
-        {
-            case Calculation.AVERAGE:
-            {
-                try
-                {
+    private static String doCalculatedColumn(String columnName, List<String> columnValues,
+                                             int calculation) {
+        switch (calculation) {
+            case Calculation.AVERAGE: {
+                try {
                     double d = 0;
-                    for (String s : columnValues) {
+                    columnType type = columnType.UNKNOWN;
+                    HashMap<String, Integer> valueMap = new HashMap<>();
+                    for (String s : columnValues) { // Get the type of the column and the values
                         //Log.e("FirebaseScouter", "Averaging : " + s);
-                        d += ConvertToDouble(s);
+                        if (isBoolean(s)) {
+                            d += ConvertToDouble(s);
+                            type = columnType.BOOLEAN;
+                        } else if (isNumeric(s)) {
+                            d += ConvertToDouble(s);
+                            type = columnType.NUMERIC;
+                        } else {
+                            if (valueMap.containsKey(s)) {
+                                valueMap.put(s, valueMap.get(s) + 1);
+                            } else {
+                                valueMap.put(s, 1);
+                            }
+                            type = columnType.STRING;
+                        }
                     }
-
-                    d /= columnValues.size();
-                    return Constants.Round(d, 1);
-                }
-                catch (Exception e)
-                {
+                    switch (type) { // Format the result based on the detected column type
+                        case NUMERIC:
+                            d /= columnValues.size();
+                            return Double.toString(Constants.Round(d, 2));
+                        case BOOLEAN:
+                            d /= columnValues.size();
+                            d *= 100;
+                            return  Double.toString(Constants.Round(d, 2)) + "%";
+                        case STRING:
+                            int max = 0;
+                            String maxValue = "";
+                            for (String s : valueMap.keySet()) {
+                                if (valueMap.get(s) > max) {
+                                    max = valueMap.get(s);
+                                    maxValue = s;
+                                }
+                            }
+                            double frequency = (valueMap.get(maxValue)
+                                    / (double) columnValues.size()) * 100;
+                            return maxValue + " (" + Constants.Round(frequency, 2) + "%)";
+                        default:
+                            return "N/A";
+                    }
+                } catch (Exception e) {
                     Constants.Log(e);
                     Log.e("FirebaseScouter",
                             "Failed to do average calculation on column: " + columnName);
-                    return -1;
+                    return Double.toString(-1);
                 }
             }
             case Calculation.MAXIMUM:
-                try
-                {
+                try {
                     double d = 0;
+                    columnType type = columnType.UNKNOWN;
+                    HashMap<String, Integer> valueMap = new HashMap<>();
                     for (String s : columnValues) {
-                        if (ConvertToDouble(s) > d)
-                            d = ConvertToDouble(s);
+                        if (isBoolean(s)) {
+                            d += ConvertToDouble(s);
+                            type = columnType.BOOLEAN;
+                        } else if (isNumeric(s)) {
+                            if (ConvertToDouble(s) > d) {
+                                d = ConvertToDouble(s);
+                            }
+                            type = columnType.NUMERIC;
+                        } else {
+                            if (valueMap.containsKey(s)) {
+                                valueMap.put(s, valueMap.get(s) + 1);
+                            } else {
+                                valueMap.put(s, 1);
+                            }
+                            type = columnType.STRING;
+                        }
                     }
-                    return d;
-                }
-                catch (Exception e)
-                {
+                    switch (type) { // Format the result based on the detected column type
+                        case NUMERIC:
+                            return Double.toString(Constants.Round(d, 2));
+                        case BOOLEAN:
+                            d /= columnValues.size();
+                            return (Constants.Round(d, 2) * 100) + "%";
+                        case STRING:
+                            int max = 0;
+                            String maxValue = "";
+                            for (String s : valueMap.keySet()) {
+                                if (valueMap.get(s) > max) {
+                                    max = valueMap.get(s);
+                                    maxValue = s;
+                                }
+                            }
+                            return maxValue;
+                        default:
+                            return "N/A";
+                    }
+                } catch (Exception e) {
                     Constants.Log(e);
                     Log.e("FirebaseScouter",
                             "Failed to do max calculation on column: " + columnName);
-                    return -1;
+                    return Double.toString(-1);
                 }
             case Calculation.MINIMUM:
-                try
-                {
-                    return Stream.of(columnValues)
+                try {
+                    return Double.toString(Stream.of(columnValues)
                             // Convert to number
                             .mapToDouble(DataCalculator::ConvertToDouble)
-                            .min().getAsDouble();
-                }
-                catch (Exception e)
-                {
+                            .min().getAsDouble());
+                } catch (Exception e) {
                     Constants.Log(e);
                     Log.e("FirebaseScouter",
                             "Failed to do max calculation on column: " + columnName);
-                    return -1;
+                    return Double.toString(-1);
                 }
             default:
-                return -1;
+                return Double.toString(-1);
         }
+    }
+
+    /**
+     * Determine if the given string is a number
+     * @param str The string to check
+     * @return true if the string is a number, false otherwise
+     */
+    private static boolean isNumeric(String str) {
+        return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
+    }
+
+    /**
+     * Determine if the given string represents a boolean
+     * @param str The string to check
+     * @return true if the string is a boolean, false otherwise
+     */
+    private static boolean isBoolean(String str) {
+        return str.matches("(true|false)");
     }
 
     /**
@@ -339,10 +410,8 @@ class DataCalculator implements Serializable {
                 default:
                     return Double.valueOf(s);
             }
-        }
-        catch (Exception e)
-        {
-            return 0;
+        } catch (Exception e) {
+            return -1.0;
         }
     }
 

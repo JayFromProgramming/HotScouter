@@ -30,29 +30,6 @@ public class ColumnSchema {
     public static List<CalculatedColumn> CalculatedColumns() {
         List<CalculatedColumn> calculatedColumns = new ArrayList<>();
 
-        /*
-        calculatedColumns.add(new CalculatedColumn("To. Cells", "Total Cells"));
-        calculatedColumns.add(new CalculatedColumn("Out. Port", "Total Outer Port"));
-        calculatedColumns.add(new CalculatedColumn("In. Port", "Total Inner Port"));
-        calculatedColumns.add(new CalculatedColumn("Miss", "Teleop Misses"));
-        calculatedColumns.add(new CalculatedColumn("A. In. Port", "Auton Inner Port"));
-        calculatedColumns.add(new CalculatedColumn("A. Out. Port", "Auton Outer Port"));
-        calculatedColumns.add(new CalculatedColumn("Cross the Line", "Auton Cross the Line"));
-        calculatedColumns.add(new CalculatedColumn("Hang", "Endgame Climb"));
-        calculatedColumns.add(new CalculatedColumn("Lv.", "Endgame Level"));
-        calculatedColumns.add(new CalculatedColumn("Tel. In. Port", "Teleop Inner Port"));
-        calculatedColumns.add(new CalculatedColumn("Tel. Out. Port", "Teleop Outer Port"));
-        calculatedColumns.add(new CalculatedColumn("P. Control", "Teleop Position Control"));
-        calculatedColumns.add(new CalculatedColumn("R. Control", "Teleop Rotation Control"));
-        calculatedColumns.add(new CalculatedColumn("Def.", "Defense Defended Against"));
-        calculatedColumns.add(new CalculatedColumn("L. Port", "Total Lower Port"));
-        calculatedColumns.add(new CalculatedColumn("Park", "Endgame Parked"));
-        calculatedColumns.add(new CalculatedColumn("Block Shot", "Defense Blocked Shots"));
-        calculatedColumns.add(new CalculatedColumn("Eff. Secs.", "Defense Effective Seconds"));
-        calculatedColumns.add(new CalculatedColumn("Most Freq. Shoot. Pos.", "Teleop Most Frequent Shooting Position"));
-        calculatedColumns.add(new CalculatedColumn("Climb. Pos.", "Endgame Climbing Position"));
-        */
-
         calculatedColumns.add(new CalculatedColumn("To. Cargo", "Total Cargo")); //sum upper+lower
         calculatedColumns.add(new CalculatedColumn("To. U. Cargo", "Total Upper Cargo")); //sum upper auton+teleop
         calculatedColumns.add(new CalculatedColumn("To. L. Cargo", "Total Lower Cargo")); //sum lower auton+teleop
