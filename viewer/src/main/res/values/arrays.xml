@@ -10,10 +10,12 @@
     </string-array>
     <string-array name="firebaseEvents">
         <item>Milford 2022</item>
-        <item>Troy 2022-Test</item>
+        <item>Troy 2022</item>
+        <item>Database Test</item>
     </string-array>
     <string-array name="firebaseEventCodes">
         <item>2022mimil</item>
-        <item>2022mitryTest</item>
+        <item>2022mitry</item>
+        <item>2022test1</item>
     </string-array>
 </resources>

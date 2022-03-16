@@ -215,19 +215,14 @@ public final class FileHandler
      * @param FILE the file to write to, without directory
      * @param s the value to write to the file
      */
-    public static void Write(String FILE, String s)
-    {
-        try
-        {
+    public static void Write(String FILE, String s) {
+        try {
             FileWriter w = GetWriter(FILE);
-            if (w != null)
-            {
+            if (w != null) {
                 w.write(s);
                 w.close();
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
         Constants.Log("Failed to write: " + s + ": " + e.getMessage());
             Constants.Log(e);
         }
@@ -245,9 +240,7 @@ public final class FileHandler
             ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
             outputStream.writeObject(o);
             outputStream.close();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Constants.Log(e);
         }
     }
@@ -257,10 +250,8 @@ public final class FileHandler
      * @param file the file to load from, without directory
      * @return the serialized object
      */
-    public static Serializable DeSerialize(String file)
-    {
-        try
-        {
+    public static Serializable DeSerialize(String file) {
+        try {
             FileInputStream fileInputStream = new FileInputStream(file(file));
             ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
             Object returnObject = inputStream.readObject();
@@ -268,9 +259,7 @@ public final class FileHandler
             inputStream.close();
 
             return (Serializable)returnObject;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Constants.Log(e);
             return null;
         }

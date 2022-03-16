@@ -62,16 +62,18 @@
             android:id="@+id/clearButton"
             android:tint="#000000"
             android:background="#00000000"/>
+
         <android.support.v7.widget.SwitchCompat
+            android:id="@+id/calculationButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/clearButton"
             android:layout_gravity="center"
+            android:layout_toRightOf="@id/clearButton"
             android:background="#00000000"
             android:text="AVG"
-            android:id="@+id/calculationButton"
-            android:theme="@style/Switch"/>
+            android:theme="@style/Switch" />
+
     </LinearLayout>
     <ImageButton
         android:layout_width="wrap_content"
@@ -85,6 +87,19 @@
         android:padding="10dp"
         android:layout_alignParentEnd="true"
         android:id="@+id/refreshButton"/>
+
+    <TextView
+        android:id="@+id/compView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/refreshButton"
+        android:fontFamily="monospace"
+        android:gravity="center_vertical"
+        android:text="@string/contextText"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="24sp" />
+
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

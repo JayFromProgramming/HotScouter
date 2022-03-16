@@ -73,14 +73,13 @@ public class RawDataActivity extends AppCompatActivity {
         {
             dataTable = (DataTable) b.getSerializable(RAW_DATA_ATTRIBUTE);
             String teamNumber = b.getString(TEAM_NUMBER_ATTRIBUTE);
-            String title = "Raw Data: " + teamNumber;
-//            try {
-//
-//                title += " - " + b.getString(TEAM_NAME_ATTRIBUTE);
-//            } catch (Exception e)
-//            {
-//                Constants.Log(e);
-//            }
+            String title = "Match Data For Team " + teamNumber;
+            try {
+                if (b.getString(TEAM_NAME_ATTRIBUTE) != null)
+                    title += " - " + b.getString(TEAM_NAME_ATTRIBUTE);
+            } catch (Exception e) {
+                Constants.Log(e);
+            }
             teamNumberView.setText(title);
         }
 
@@ -88,6 +87,7 @@ public class RawDataActivity extends AppCompatActivity {
         try {
             if (dataTable != null) {
                 if (!(dataTable.GetCells().size() > 0)) {
+                    teamNumberView.setText("No Data Available!");
                     Log.e("FirebaseScouter", "No input raw data found");
                     return;
                 }

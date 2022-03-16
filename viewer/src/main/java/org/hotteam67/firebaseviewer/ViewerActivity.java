@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.evrencoskun.tableview.TableView;
 import com.evrencoskun.tableview.sort.SortState;
@@ -54,6 +55,7 @@ public class ViewerActivity extends AppCompatActivity {
     private MultiFilter maximumsFilter;
 
     private ImageButton refreshButton;
+    private TextView ContextBar;
     private ImageButton clearButton;
     private Button teamsGroupButton;
 
@@ -64,6 +66,8 @@ public class ViewerActivity extends AppCompatActivity {
     private DarkNumberPicker teamsGroupInput;
 
     private Spinner teamsGroupType;
+
+    private String eventName;
 
     /**
      * Result for the raw data activity, to show a specific match if requested
@@ -97,8 +101,7 @@ public class ViewerActivity extends AppCompatActivity {
      * @param savedInstanceState ignored
      */
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -110,12 +113,12 @@ public class ViewerActivity extends AppCompatActivity {
         finalView.setLayoutParams(new ActionBar.LayoutParams(
                 ActionBar.LayoutParams.MATCH_PARENT,
                 ActionBar.LayoutParams.MATCH_PARENT));
-        if (bar != null)
-        {
+        if (bar != null) {
             bar.setCustomView(finalView);
             bar.setDisplayShowCustomEnabled(true);
         }
 
+        ContextBar = finalView.findViewById(R.id.compView);
 
         progressBar = finalView.findViewById(R.id.indeterminateBar);
 
@@ -128,8 +131,7 @@ public class ViewerActivity extends AppCompatActivity {
         refreshButton.setOnClickListener(view -> UpdateUINetwork());
 
         clearButton = findViewById(R.id.clearButton);
-        clearButton.setOnClickListener(v ->
-        {
+        clearButton.setOnClickListener(v -> {
             RemoveAlliances();
             teamsGroupButton.setText(getResources().getString(R.string.show_teams_button_label));
             RemoveAllFilters();
@@ -188,12 +190,9 @@ public class ViewerActivity extends AppCompatActivity {
 
         if (ContextCompat.checkSelfPermission(
                         this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_GRANTED)
-        {
+                        == PackageManager.PERMISSION_GRANTED) {
             LoadLocal();
-        }
-        else
-        {
+        } else {
             Log.d("HotTeam67", "Requesting Permissions");
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -204,8 +203,7 @@ public class ViewerActivity extends AppCompatActivity {
     /**
      * Remove the alliance highlights from the tableviews
      */
-    private void RemoveAlliances()
-    {
+    private void RemoveAlliances() {
         MainTableAdapter adapter1 = (MainTableAdapter)averagesTable.getAdapter();
         MainTableAdapter adapter2 = (MainTableAdapter)maximumsTable.getAdapter();
         adapter1.clearAllianceHighlights();
@@ -216,8 +214,7 @@ public class ViewerActivity extends AppCompatActivity {
      * Setup the tableview with its adapter and the event listener
      * @param v the view to be setup
      */
-    private void setupTableView(TableView v)
-    {
+    private void setupTableView(TableView v) {
         MainTableAdapter adapter = new MainTableAdapter(this);
         v.setAdapter(adapter);
         v.setTableViewListener(new MainTableViewListener(v, adapter));
@@ -234,8 +231,7 @@ public class ViewerActivity extends AppCompatActivity {
         // Older versions of android (pre API 21) cancel animations for views with a height of 0.
         v.getLayoutParams().height = 1;
         v.setVisibility(View.VISIBLE);
-        Animation a = new Animation()
-        {
+        Animation a = new Animation() {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
                 v.getLayoutParams().height = interpolatedTime == 1
@@ -262,8 +258,7 @@ public class ViewerActivity extends AppCompatActivity {
     private static void collapse(final View v) {
         final int initialHeight = v.getMeasuredHeight();
 
-        Animation a = new Animation()
-        {
+        Animation a = new Animation() {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
                 if(interpolatedTime == 1){
@@ -297,12 +292,10 @@ public class ViewerActivity extends AppCompatActivity {
             }
 
             @Override
-            public void OnCompleteProgress()
-            {
+            public void OnCompleteProgress() {
                 runOnUiThread(() -> {
                     EndProgressAnimation();
-                    if (averagesTable != null && maximumsTable != null && DataModel.GetAverages() != null && DataModel.GetMaximums() != null)
-                    {
+                    if (averagesTable != null && maximumsTable != null && DataModel.GetAverages() != null && DataModel.GetMaximums() != null) {
                         ((MainTableAdapter) averagesTable.getAdapter()).setAllItems(DataModel.GetAverages());
                         ((MainTableAdapter) maximumsTable.getAdapter()).setAllItems(DataModel.GetMaximums());
                         UpdateUI();
@@ -317,8 +310,7 @@ public class ViewerActivity extends AppCompatActivity {
     /**
      * Update the user interface from the network, including recalculating everything etc.
      */
-    private void UpdateUINetwork()
-    {
+    private void UpdateUINetwork() {
         DataModel.RefreshTable(() -> runOnUiThread(() -> {
             if (averagesTable != null && maximumsTable != null && DataModel.GetAverages() != null && DataModel.GetMaximums() != null) {
                 ((MainTableAdapter) averagesTable.getAdapter()).setAllItems(DataModel.GetAverages());
@@ -332,24 +324,24 @@ public class ViewerActivity extends AppCompatActivity {
     /**
      * Simply clears all of the filters set
      */
-    private void UpdateUI()
-    {
+    private void UpdateUI() {
         // teamsGroupInput.setMaximum(9999);
-        if (teamsGroupInput.getValue() == 0)
-        {
+        if (teamsGroupInput.getValue() == 0) {
             clearButton.setVisibility(View.INVISIBLE);
             teamsGroupButton.setText(getResources().getString(R.string.show_teams_button_label));
-        }
-        else
-            clearButton.setVisibility(View.VISIBLE);
+        } else clearButton.setVisibility(View.VISIBLE);
 
+        // Below is where the contextBar is updated
+        // Context bar should look like this:
+        // Matches: [highestMatch]/[totalMatches]; Displaying Comp: [compName]
+
+        ContextBar.setText("Comp: " + eventName);
     }
 
     /**
      * Load the data from local files (serialized calculated and raw values)
      */
-    private void LoadLocal()
-    {
+    private void LoadLocal() {
         DataModel.LoadSerializedTables();
         DataModel.LoadTBADataLocal();
     }
@@ -358,8 +350,7 @@ public class ViewerActivity extends AppCompatActivity {
      * Update the view based on the teams group value, such as match/alliance number
      */
     @SuppressLint("SetTextI18n")
-    private void UpdateTeamsGroup()
-    {
+    private void UpdateTeamsGroup() {
         int id = teamsGroupInput.getValue();
         MainTableAdapter adapter1 = (MainTableAdapter)averagesTable.getAdapter();
         MainTableAdapter adapter2 = (MainTableAdapter)maximumsTable.getAdapter();
@@ -437,8 +428,7 @@ public class ViewerActivity extends AppCompatActivity {
     /**
      * Clear all of the filters on the table views
      */
-    private synchronized void RemoveAllFilters()
-    {
+    private synchronized void RemoveAllFilters() {
         averagesFilter.removeFilter(Constants.TEAM_NUMBER_COLUMN);
         maximumsFilter.removeFilter(Constants.TEAM_NUMBER_COLUMN);
     }
@@ -457,8 +447,7 @@ public class ViewerActivity extends AppCompatActivity {
      * @param s the string to filter on
      * @param doContains whether to doContains - whether to use .contains() or .equals()
      */
-    private synchronized void Filter(String s, boolean doContains)
-    {
+    private synchronized void Filter(String s, boolean doContains) {
         averagesFilter.set(Constants.TEAM_NUMBER_COLUMN, s, doContains);
         maximumsFilter.set(Constants.TEAM_NUMBER_COLUMN, s, doContains);
     }
@@ -467,8 +456,7 @@ public class ViewerActivity extends AppCompatActivity {
      * When the calculation button is pressed - show loading and recalculate everything
      * @param v the calculation button view
      */
-    private synchronized void OnCalculationButton(View v)
-    {
+    private synchronized void OnCalculationButton(View v) {
 
 
         ((Button)v).setText((((Button) v).getText().toString().equals("MAX")) ?
@@ -486,8 +474,7 @@ public class ViewerActivity extends AppCompatActivity {
      * Get the active table, either averages or maximums, as these are cycled between
      * @return the active TableView
      */
-    private synchronized TableView GetActiveTable()
-    {
+    private synchronized TableView GetActiveTable() {
         return (averagesTable.getVisibility() == View.VISIBLE) ? averagesTable : maximumsTable;
     }
 
@@ -495,16 +482,14 @@ public class ViewerActivity extends AppCompatActivity {
      * Get the inactive table, either averages or maximums, as these are cycled between
      * @return the inactive TableView
      */
-    private synchronized TableView GetInactiveTable()
-    {
+    private synchronized TableView GetInactiveTable() {
         return (averagesTable.getVisibility() == View.VISIBLE) ? maximumsTable : averagesTable;
     }
 
     /**
      * Event handler to show the settings activity when the button is clicked
      */
-    private void OnSettingsButton()
-    {
+    private void OnSettingsButton() {
         Intent settingsIntent = new Intent(this, PreferencesActivity.class);
         startActivityForResult(settingsIntent, Constants.PreferencesRequestCode);
     }
@@ -516,11 +501,9 @@ public class ViewerActivity extends AppCompatActivity {
      * @param grantResults the results for requested permissions
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == Constants.REQUEST_ENABLE_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 LoadLocal();
             }
         }
@@ -539,12 +522,23 @@ public class ViewerActivity extends AppCompatActivity {
         String firebaseKeyOverride = (String) prefs.getAll().get("pref_firebaseKeyOverride");
 
         if (tbaKeyOverride == null || tbaKeyOverride.isEmpty()){
-            tbaKey = (String) prefs.getAll().get("pref_firebase_event");
+            tbaKey = (String) prefs.getAll().get("pref_tba_event");
         } else tbaKey = tbaKeyOverride; // Used to bypass the tba key selector
 
         if (firebaseKeyOverride == null || firebaseKeyOverride.isEmpty()){
             firebaseKey = (String) prefs.getAll().get("pref_firebase_event");
         } else firebaseKey = firebaseKeyOverride; // Used to bypass the firebase key selector
+
+        // Find the name of the firebase key by comparing to arrays.xml
+        eventName = firebaseKey;
+        String[] firebaseEvents = getResources().getStringArray(R.array.firebaseEvents);
+        String[] firebaseKeys = getResources().getStringArray(R.array.firebaseEventCodes);
+        for (int i = 0; i < firebaseKeys.length; i++) {
+            if (firebaseKeys[i].equals(firebaseKey)) {
+                eventName = firebaseEvents[i];
+            }
+        }
+
 
         String[] ConnectionProperties = {firebaseKey, connectionString, tbaKey};
         System.out.println("Connection Properties: " + Arrays.toString(ConnectionProperties));
@@ -554,8 +548,7 @@ public class ViewerActivity extends AppCompatActivity {
     /**
      * Spin the refresh button around, by hiding it and showing an indeterminate progress bar
      */
-    private void StartProgressAnimation()
-    {
+    private void StartProgressAnimation() {
         refreshButton.setEnabled(false);
         refreshButton.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
@@ -565,8 +558,7 @@ public class ViewerActivity extends AppCompatActivity {
      * Stop spinning the refresh button around, by showing it again and hiding the indeterminate progress
      * bar
      */
-    private void EndProgressAnimation()
-    {
+    private void EndProgressAnimation() {
         refreshButton.setEnabled(true);
         refreshButton.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);

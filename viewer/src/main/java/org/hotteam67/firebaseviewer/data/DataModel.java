@@ -149,44 +149,33 @@ public class DataModel
     /**
      * Load tables from disk, and deserialize them into DataTable objects
      */
-    public static void LoadSerializedTables()
-    {
-        try
-        {
+    public static void LoadSerializedTables() {
+        try {
             dataLoadEvent.OnBeginProgress();
-            @SuppressLint("StaticFieldLeak") AsyncTask task = new AsyncTask()
-            {
+            @SuppressLint("StaticFieldLeak") AsyncTask task = new AsyncTask() {
                 @Override
-                protected Object doInBackground(Object[] objects)
-                {
-                    try
-                    {
+                protected Object doInBackground(Object[] objects) {
+                    try {
                         averages = (DataTable)FileHandler.DeSerialize(FileHandler.Files.AVERAGES_CACHE);
-                    } catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         Constants.Log(e);
                     }
-                    try
-                    {
+                    try {
                         maximums = (DataTable)FileHandler.DeSerialize(FileHandler.Files.MAXIMUMS_CACHE);
-                    } catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         Constants.Log(e);
                     }
 
-                    try
-                    {
+                    try {
                         rawData = (DataTable)FileHandler.DeSerialize(FileHandler.Files.RAW_CACHE);
-                    } catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         Constants.Log(e);
                     }
                     return null;
                 }
 
                 @Override
-                protected void onPostExecute(Object o)
-                {
+                protected void onPostExecute(Object o) {
                     super.onPostExecute(o);
                     outputAverages = averages;
                     outputMaximums = maximums;
@@ -194,9 +183,7 @@ public class DataModel
                 }
             };
             task.execute();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Constants.Log(e);
         }
     }
@@ -488,17 +475,12 @@ public class DataModel
 
         try {
             teamNumbersNames = new JSONObject(FileHandler.LoadContents(FileHandler.Files.TEAM_NAMES_FILE));
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Constants.Log(e);
         }
-        try
-        {
+        try {
             teamNumbersRanks = new JSONObject(FileHandler.LoadContents(FileHandler.Files.RANKS_FILE));
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Constants.Log(e);
         }
 

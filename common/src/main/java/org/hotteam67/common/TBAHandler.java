@@ -230,7 +230,7 @@ public class TBAHandler {
     {
         String url = Constants.TBA.BASE_URL;
 
-        url += Constants.TBA.EVENT + eventCode + Constants.TBA.TEAMS + Constants.AUTH_TOKEN;
+        url += Constants.TBA.EVENT + eventCode + Constants.TBA.TEAMS + "~" + Constants.AUTH_TOKEN;
         Log.d("HotTeam67", "Pulling data from url: " + url);
 
         RetrieveUrl retrieveUrl = new RetrieveUrl(new OnDownloadResultListener<String>() {
@@ -239,6 +239,7 @@ public class TBAHandler {
                 JSONArray resultArray;
                 JSONObject returnObject = new JSONObject();
                 try {
+                    Constants.Log("Team Data: " + result);
                     resultArray = new JSONArray(result);
 
                     for (int i = 0; i < resultArray.length(); ++i) {
