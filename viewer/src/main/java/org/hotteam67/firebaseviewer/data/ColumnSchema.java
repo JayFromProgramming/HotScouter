@@ -3,6 +3,8 @@ package org.hotteam67.firebaseviewer.data;
 import android.support.annotation.NonNull;
 
 import org.hotteam67.common.FileHandler;
+import org.hotteam67.firebaseviewer.R;
+import org.hotteam67.firebaseviewer.web.FireBaseHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +38,7 @@ public class ColumnSchema {
         List<CalculatedColumn> calculatedColumns = new ArrayList<>();
 
         String schemaRaw = FileHandler.LoadContents(FileHandler.Files.SCHEMA_CACHE_FILE);
+
         if (schemaRaw.isEmpty()) return calculatedColumns;
         try {
             JSONObject schema = new JSONObject(schemaRaw);
@@ -50,23 +53,23 @@ public class ColumnSchema {
             return calculatedColumns;
         }
 
-        calculatedColumns.add(new CalculatedColumn("To. Cargo", "Total Cargo")); //sum upper+lower
-        calculatedColumns.add(new CalculatedColumn("To. U. Cargo", "Total Upper Cargo")); //sum upper auton+teleop
-        calculatedColumns.add(new CalculatedColumn("To. L. Cargo", "Total Lower Cargo")); //sum lower auton+teleop
-        calculatedColumns.add(new CalculatedColumn("Starting Position", "Auton Starting Position")); //Selection
-        calculatedColumns.add(new CalculatedColumn("Cross the Line", "Auton Cross The Line")); //Boolean
-        calculatedColumns.add(new CalculatedColumn("A. U. Cargo", "Auton Upper Cargo")); //Number
-        calculatedColumns.add(new CalculatedColumn("A. L. Cargo", "Auton Lower Cargo")); //Number
-        calculatedColumns.add(new CalculatedColumn("Tel. U. Cargo", "Teleop Upper Cargo")); //Number
-        //calculatedColumns.add(new CalculatedColumn("Tel. L. Cargo", "Teleop Lower Cargo")); //Number
-        calculatedColumns.add(new CalculatedColumn("Miss", "Teleop Misses")); //Number
-        calculatedColumns.add(new CalculatedColumn("Pref. Shot Pos.", "Teleop Preferred Shooting Position")); //Selection
-        calculatedColumns.add(new CalculatedColumn("Del. Cargo", "Teleop Delivered Cargo")); //Boolean
-        calculatedColumns.add(new CalculatedColumn("End Climb", "Endgame Climbing Rung")); //Selection
-        calculatedColumns.add(new CalculatedColumn("Def. A", "Defense Defended Against")); //Boolean
-        calculatedColumns.add(new CalculatedColumn("Def. P", "Defense Played Defense")); //Boolean
-        calculatedColumns.add(new CalculatedColumn("Block Shots", "Defense Blocked Shots")); //Number
-        calculatedColumns.add(new CalculatedColumn("Eff. Secs.", "Defense Effective Seconds")); //Number
+//        calculatedColumns.add(new CalculatedColumn("To. Cargo", "Total Cargo")); //sum upper+lower
+//        calculatedColumns.add(new CalculatedColumn("To. U. Cargo", "Total Upper Cargo")); //sum upper auton+teleop
+//        calculatedColumns.add(new CalculatedColumn("To. L. Cargo", "Total Lower Cargo")); //sum lower auton+teleop
+//        calculatedColumns.add(new CalculatedColumn("Starting Position", "Auton Starting Position")); //Selection
+//        calculatedColumns.add(new CalculatedColumn("Cross the Line", "Auton Cross The Line")); //Boolean
+//        calculatedColumns.add(new CalculatedColumn("A. U. Cargo", "Auton Upper Cargo")); //Number
+//        calculatedColumns.add(new CalculatedColumn("A. L. Cargo", "Auton Lower Cargo")); //Number
+//        calculatedColumns.add(new CalculatedColumn("Tel. U. Cargo", "Teleop Upper Cargo")); //Number
+//        //calculatedColumns.add(new CalculatedColumn("Tel. L. Cargo", "Teleop Lower Cargo")); //Number
+//        calculatedColumns.add(new CalculatedColumn("Miss", "Teleop Misses")); //Number
+//        calculatedColumns.add(new CalculatedColumn("Pref. Shot Pos.", "Teleop Preferred Shooting Position")); //Selection
+//        calculatedColumns.add(new CalculatedColumn("Del. Cargo", "Teleop Delivered Cargo")); //Boolean
+//        calculatedColumns.add(new CalculatedColumn("End Climb", "Endgame Climbing Rung")); //Selection
+//        calculatedColumns.add(new CalculatedColumn("Def. A", "Defense Defended Against")); //Boolean
+//        calculatedColumns.add(new CalculatedColumn("Def. P", "Defense Played Defense")); //Boolean
+//        calculatedColumns.add(new CalculatedColumn("Block Shots", "Defense Blocked Shots")); //Number
+//        calculatedColumns.add(new CalculatedColumn("Eff. Secs.", "Defense Effective Seconds")); //Number
 
         return calculatedColumns;
     }

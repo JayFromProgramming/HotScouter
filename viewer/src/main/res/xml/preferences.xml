@@ -19,6 +19,9 @@
                 android:entryValues="@array/firebaseEventCodes"
                 android:defaultValue="0"/>
             <EditTextPreference
+                android:key="pref_schema"
+                android:title="Schema"/>
+            <EditTextPreference
                 android:key="pref_tbaKeyOverride"
                 android:title="TBA Event Key Override"
                 android:summary="Bypasses event selector"/>

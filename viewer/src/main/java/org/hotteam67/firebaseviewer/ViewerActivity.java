@@ -26,6 +26,8 @@ import android.widget.TextView;
 
 import com.evrencoskun.tableview.TableView;
 import com.evrencoskun.tableview.sort.SortState;
+
+import org.hotteam67.common.FileHandler;
 import org.hotteam67.firebaseviewer.data.DataModel;
 import org.hotteam67.firebaseviewer.data.MultiFilter;
 import org.hotteam67.firebaseviewer.tableview.MainTableAdapter;
@@ -36,6 +38,7 @@ import org.hotteam67.common.Constants;
 import org.hotteam67.common.DarkNumberPicker;
 import org.hotteam67.common.InterceptAllLayout;
 import org.hotteam67.common.TBAHandler;
+import org.hotteam67.firebaseviewer.web.FireBaseHandler;
 
 import java.util.Arrays;
 import java.util.List;
@@ -295,6 +298,7 @@ public class ViewerActivity extends AppCompatActivity {
             public void OnCompleteProgress() {
                 runOnUiThread(() -> {
                     EndProgressAnimation();
+
                     if (averagesTable != null && maximumsTable != null && DataModel.GetAverages() != null && DataModel.GetMaximums() != null) {
                         ((MainTableAdapter) averagesTable.getAdapter()).setAllItems(DataModel.GetAverages());
                         ((MainTableAdapter) maximumsTable.getAdapter()).setAllItems(DataModel.GetMaximums());
@@ -521,6 +525,8 @@ public class ViewerActivity extends AppCompatActivity {
         String tbaKeyOverride = (String) prefs.getAll().get("pref_tbaKeyOverride");
         String firebaseKeyOverride = (String) prefs.getAll().get("pref_firebaseKeyOverride");
 
+        String schema = (String) prefs.getAll().get("pref_schema");
+
         if (tbaKeyOverride == null || tbaKeyOverride.isEmpty()){
             tbaKey = (String) prefs.getAll().get("pref_tba_event");
         } else tbaKey = tbaKeyOverride; // Used to bypass the tba key selector
@@ -539,8 +545,7 @@ public class ViewerActivity extends AppCompatActivity {
             }
         }
 
-
-        String[] ConnectionProperties = {firebaseKey, connectionString, tbaKey};
+        String[] ConnectionProperties = {firebaseKey, connectionString, tbaKey, schema};
         System.out.println("Connection Properties: " + Arrays.toString(ConnectionProperties));
         return ConnectionProperties;
     }

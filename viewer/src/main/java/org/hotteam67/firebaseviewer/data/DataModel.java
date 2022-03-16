@@ -212,6 +212,8 @@ public class DataModel
         final FireBaseHandler model = new FireBaseHandler(
                 databaseUrl, eventName, apiKey);
 
+        model.getSchema(connectionProperties[3]);
+
         // Null child to get all raw data
         model.Download(new OnDownloadResultListener<HashMap<String, Object>>() {
             @Override

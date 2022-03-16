@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.hotteam67.common.Constants;
+import org.hotteam67.common.FileHandler;
 import org.hotteam67.common.OnDownloadResultListener;
 import org.json.JSONObject;
 
@@ -32,14 +34,15 @@ public class FireBaseHandler {
 
     private HashMap<String, Object> results = null;
 
+    protected String schema = null;
+
     /**
      * Constructor takes the parameters for the FireBase database
      * @param url the url of the FireBase server to use as a starting point
      * @param event the event name, represents a json endpoint where everything is put/retrieved
      * @param apiKey the api key to use with the database
      */
-    public FireBaseHandler(String url, String event, String apiKey)
-    {
+    public FireBaseHandler(String url, String event, String apiKey) {
         fireBaseUrl = url;
         fireBaseEvent = event;
         fireBaseApiKey = apiKey;
@@ -50,10 +53,14 @@ public class FireBaseHandler {
      * @param completeEvent a HashMap<HashMap<string, string>> is the final format. This is easier
      *                      to turn into a standard table
      */
-    public void Download(OnDownloadResultListener<HashMap<String, Object>> completeEvent)
-    {
+    public void Download(OnDownloadResultListener<HashMap<String, Object>> completeEvent) {
         fireBaseCompleteEvent = completeEvent;
         new RetrieveFireBaseTask().execute();
+    }
+
+    public void getSchema(String schema) {
+        this.schema = schema;
+        new RetrieveSchemaTask().execute();
     }
 
     /**
@@ -62,10 +69,8 @@ public class FireBaseHandler {
      */
     @SuppressLint("StaticFieldLeak")
     class RetrieveFireBaseTask extends AsyncTask<Void, Void, String> {
-        protected String doInBackground(Void... nothing)
-        {
-            try
-            {
+        protected String doInBackground(Void... nothing) {
+            try {
                 String finalUrl = fireBaseUrl + "/" + fireBaseEvent + ".json" + "?auth=" + fireBaseApiKey;
                 Log.d("HotTeam67", "URL: " + finalUrl);
 
@@ -80,8 +85,7 @@ public class FireBaseHandler {
 
                     String line = reader.readLine();
                     StringBuilder response = new StringBuilder();
-                    while (line != null)
-                    {
+                    while (line != null) {
                         response.append(line);
                         line = reader.readLine();
                     }
@@ -107,15 +111,49 @@ public class FireBaseHandler {
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
+    class RetrieveSchemaTask extends AsyncTask<Void, Void, String> {
+
+        protected String doInBackground(Void... nothing) {
+            try {
+                String finalUrl = fireBaseUrl + "/viewer_schemas/" + schema + ".json" + "?auth=" + fireBaseApiKey;
+                Log.d("HotTeam67", "URL: " + finalUrl);
+
+                HttpURLConnection conn = (HttpURLConnection) new URL(finalUrl).openConnection();
+                conn.setRequestMethod("GET");
+
+                Log.d("HotTeam67", "Response code: " + conn.getResponseCode());
+                if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) { // 200
+
+                    InputStream responseStream = conn.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(responseStream));
+
+                    String line = reader.readLine();
+                    StringBuilder response = new StringBuilder();
+                    while (line != null) {
+                        response.append(line);
+                        line = reader.readLine();
+                    }
+                    FileHandler.Write(FileHandler.Files.SCHEMA_CACHE_FILE, response.toString());
+                }
+                conn.disconnect();
+            } catch (Exception e) {
+                Constants.Log(e);
+            }
+            return "";
+        }
+
+        protected void onPostExecute(String result) {
+        }
+    }
+
 
     /**
      * Turn the downloaded JSON object into a HashMap in memory
      * @param json the input json from FireBase
      */
-    private void DoLoad(String json)
-    {
-        try
-        {
+    private void DoLoad(String json) {
+        try {
             if (json == null || json.trim().isEmpty()) {
                 fireBaseCompleteEvent.onFail("Do Load Failed");
                 return;
