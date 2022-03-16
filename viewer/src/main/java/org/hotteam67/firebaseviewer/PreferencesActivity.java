@@ -27,8 +27,7 @@ public class PreferencesActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
         }
@@ -70,8 +69,7 @@ public class PreferencesActivity extends AppCompatActivity
     /**
      * Preferences fragment with an editText that shows in the summary, for easier use
      */
-    public static class SimplePreferences extends PreferenceFragment
-    {
+    public static class SimplePreferences extends PreferenceFragment {
         @Override
         public void onCreate(final Bundle savedInstanceState)
         {
@@ -96,8 +94,7 @@ public class PreferencesActivity extends AppCompatActivity
     /**
      * Register change listener
      */
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         prefs.getPreferenceScreen().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
@@ -106,8 +103,7 @@ public class PreferencesActivity extends AppCompatActivity
     /**
      * Unregister change listener
      */
-    protected void onPause()
-    {
+    protected void onPause() {
         super.onPause();
         prefs.getPreferenceScreen().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
@@ -119,8 +115,7 @@ public class PreferencesActivity extends AppCompatActivity
      * @param key the key for the pref that changed
      */
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                          String key)
-    {
+                                          String key) {
         Preference pref = prefs.findPreference(key);
         if (pref instanceof EditTextPreference)
         {

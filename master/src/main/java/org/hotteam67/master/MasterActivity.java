@@ -319,7 +319,7 @@ public class MasterActivity extends BluetoothServerActivity {
                     }
 
                     @Override
-                    public void onFail() {
+                    public void onFail(String string) {
                         MessageBox("Failed to download matches with key: " + eventKey);
                     }
                 }));

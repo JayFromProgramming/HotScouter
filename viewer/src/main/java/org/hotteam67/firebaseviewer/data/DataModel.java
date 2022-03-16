@@ -209,19 +209,19 @@ public class DataModel
     {
         dataLoadEvent.OnBeginProgress();
 
-        LoadTBAData();
 
-
-        if (connectionProperties == null || connectionProperties.length != 4)
-        {
+        if (connectionProperties == null || connectionProperties.length <= 2) {
             Log.d("HotTeam67", "Couldn't load connection string");
+            Log.d("HotTeam67/RefreshTable", "Connection string: " + Arrays.toString(connectionProperties));
             dataLoadEvent.OnCompleteProgress();
             return;
         }
 
-        String databaseUrl = connectionProperties[0];
-        String eventName = connectionProperties[1];
-        String apiKey = connectionProperties[2];
+        LoadTBAData();
+
+        String databaseUrl = "https://hot-67-scouting.firebaseio.com";
+        String eventName = connectionProperties[0];
+        String apiKey = connectionProperties[1];
 
         final FireBaseHandler model = new FireBaseHandler(
                 databaseUrl, eventName, apiKey);
@@ -324,9 +324,8 @@ public class DataModel
      */
     private static synchronized void LoadTBAData()
     {
-        if (connectionProperties == null || connectionProperties.length <= 3)
-            return;
-        String eventKey = connectionProperties[3];
+
+        String eventKey = connectionProperties[2];
 
         try {
             StringBuilder s = new StringBuilder();

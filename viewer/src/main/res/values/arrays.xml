@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tbaEvents">
+        <item>Milford 2022</item>
+        <item>Troy 2022</item>
+    </string-array>
+    <string-array name="tbaEventCodes">
+        <item>2022mimil</item>
+        <item>2022mitry</item>
+    </string-array>
+    <string-array name="firebaseEvents">
+        <item>Milford 2022</item>
+        <item>Troy 2022-Test</item>
+    </string-array>
+    <string-array name="firebaseEventCodes">
+        <item>2022mimil</item>
+        <item>2022mitryTest</item>
+    </string-array>
+</resources>

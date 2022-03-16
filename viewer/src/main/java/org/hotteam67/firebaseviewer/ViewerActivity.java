@@ -36,6 +36,7 @@ import org.hotteam67.common.DarkNumberPicker;
 import org.hotteam67.common.InterceptAllLayout;
 import org.hotteam67.common.TBAHandler;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -287,10 +288,8 @@ public class ViewerActivity extends AppCompatActivity {
     /**
      * Refresh the connection properties, redownload all raw data, and recalculate everything.
      */
-    private void RefreshConnectionProperties()
-    {
-        DataModel.Setup(GetConnectionProperties(), new DataModel.DataLoadEvent()
-        {
+    private void RefreshConnectionProperties() {
+        DataModel.Setup(GetConnectionProperties(), new DataModel.DataLoadEvent() {
             @Override
             public void OnBeginProgress()
             {
@@ -531,19 +530,25 @@ public class ViewerActivity extends AppCompatActivity {
      * Get the preferences values for connection properties like Firebase url
      * @return the connection properties, in order of appearance in XML
      */
-    private String[] GetConnectionProperties()
-    {
+    private String[] GetConnectionProperties() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String connectionString = (String) prefs.getAll().get("pref_connectionString");
-        if (connectionString == null)
-            return null;
-        String[] values = connectionString.split(";");
-        if (values.length != 4)
-        {
-            return null;
-        }
+        String firebaseKey;
+        String tbaKey;
+        String tbaKeyOverride = (String) prefs.getAll().get("pref_tbaKeyOverride");
+        String firebaseKeyOverride = (String) prefs.getAll().get("pref_firebaseKeyOverride");
 
-        return values;
+        if (tbaKeyOverride == null || tbaKeyOverride.isEmpty()){
+            tbaKey = (String) prefs.getAll().get("pref_firebase_event");
+        } else tbaKey = tbaKeyOverride; // Used to bypass the tba key selector
+
+        if (firebaseKeyOverride == null || firebaseKeyOverride.isEmpty()){
+            firebaseKey = (String) prefs.getAll().get("pref_firebase_event");
+        } else firebaseKey = firebaseKeyOverride; // Used to bypass the firebase key selector
+
+        String[] ConnectionProperties = {firebaseKey, connectionString, tbaKey};
+        System.out.println("Connection Properties: " + Arrays.toString(ConnectionProperties));
+        return ConnectionProperties;
     }
 
     /**

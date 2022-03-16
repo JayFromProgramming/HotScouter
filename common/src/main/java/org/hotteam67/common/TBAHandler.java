@@ -84,8 +84,7 @@ public class TBAHandler {
         }
 
         @Override
-        protected void onPostExecute(String s)
-        {
+        protected void onPostExecute(String s) {
             onCompleteEvent.onComplete(s);
         }
     }

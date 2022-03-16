@@ -339,7 +339,8 @@ class DataCalculator implements Serializable {
                             return Double.toString(Constants.Round(d, 2));
                         case BOOLEAN:
                             d /= columnValues.size();
-                            return (Constants.Round(d, 2) * 100) + "%";
+                            d *= 100;
+                            return  Double.toString(Constants.Round(d, 2)) + "%";
                         case STRING:
                             int max = 0;
                             String maxValue = "";
