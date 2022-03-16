@@ -38,6 +38,11 @@ public final class FileHandler
         public static final String SCHEMA_FILE = "schema.json";
 
         /**
+         * Viewer schema cache
+         */
+        public static final String SCHEMA_CACHE_FILE = "Viewer/schemaCache.json";
+
+        /**
          * The scouter's scouted + unscouted matches (unscouted are just team numbers)
          */
         public static final String SCOUTER_FILE = "Scouter/scouterDatabase.json";
@@ -108,9 +113,16 @@ public final class FileHandler
     }
 
 
-    public static boolean Exists(String file)
-    {
+    public static boolean Exists(String file) {
         return new File(file(file)).isFile();
+    }
+
+    public static void clearCache() {
+        Log.d("FileHandler", "Clearing cache");
+        File dir = new File(DIRECTORY + "Viewer/");
+        for (File f : dir.listFiles()) {
+            f.delete();
+        }
     }
 
     /**

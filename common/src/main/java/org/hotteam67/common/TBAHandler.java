@@ -226,8 +226,7 @@ public class TBAHandler {
      * @param eventCode the blue alliance event code, including year
      * @param returnEvent consumes team number as key team name as value
      */
-    public static void TeamNames(String eventCode, OnDownloadResultListener<JSONObject> returnEvent)
-    {
+    public static void TeamNames(String eventCode, OnDownloadResultListener<JSONObject> returnEvent) {
         String url = Constants.TBA.BASE_URL;
 
         url += Constants.TBA.EVENT + eventCode + Constants.TBA.TEAMS + "~" + Constants.AUTH_TOKEN;

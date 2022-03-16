@@ -2,6 +2,11 @@ package org.hotteam67.firebaseviewer.data;
 
 import android.support.annotation.NonNull;
 
+import org.hotteam67.common.FileHandler;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +34,21 @@ public class ColumnSchema {
      */
     public static List<CalculatedColumn> CalculatedColumns() {
         List<CalculatedColumn> calculatedColumns = new ArrayList<>();
+
+        String schemaRaw = FileHandler.LoadContents(FileHandler.Files.SCHEMA_CACHE_FILE);
+        if (schemaRaw.isEmpty()) return calculatedColumns;
+        try {
+            JSONObject schema = new JSONObject(schemaRaw);
+            JSONArray columns = schema.getJSONArray("calculatedColumns");
+            for (int i = 0; i < columns.length(); i++) {
+                JSONObject column = columns.getJSONObject(i);
+                calculatedColumns.add(new CalculatedColumn(column.getString("name"),
+                                column.getString("rawName")));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return calculatedColumns;
+        }
 
         calculatedColumns.add(new CalculatedColumn("To. Cargo", "Total Cargo")); //sum upper+lower
         calculatedColumns.add(new CalculatedColumn("To. U. Cargo", "Total Upper Cargo")); //sum upper auton+teleop

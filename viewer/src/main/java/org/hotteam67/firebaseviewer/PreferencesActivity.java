@@ -11,6 +11,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.hotteam67.common.FileHandler;
+import org.hotteam67.firebaseviewer.data.DataModel;
+
 /**
  * Simple preferences activity, loads preferences from xml and saves them to shared preferences
  * to be accessed in ServerActivity
@@ -25,8 +28,7 @@ public class PreferencesActivity extends AppCompatActivity
      * @return true, the event was consumed
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -39,8 +41,7 @@ public class PreferencesActivity extends AppCompatActivity
      * @param savedInstanceState saved state is ignored
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
 
@@ -117,10 +118,11 @@ public class PreferencesActivity extends AppCompatActivity
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
         Preference pref = prefs.findPreference(key);
-        if (pref instanceof EditTextPreference)
-        {
+        if (pref instanceof EditTextPreference) {
             EditTextPreference etp = (EditTextPreference) pref;
             pref.setSummary(etp.getText());
         }
+        // Clear the cache
+        FileHandler.clearCache();
     }
 }

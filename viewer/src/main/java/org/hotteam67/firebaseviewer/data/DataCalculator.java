@@ -21,6 +21,7 @@ import java.util.List;
  */
 
 class DataCalculator implements Serializable {
+
     /**
      * The input raw data table
      */
@@ -84,6 +85,7 @@ class DataCalculator implements Serializable {
         columnsNames = rawData.GetColumnNames();
         this.teamRanksJson = teamRanks.toString();
         calculatedColumnIndices = new ArrayList<>();
+
         for (int i = 0; i < calculatedColumns.size(); ++i) {
             try {
                 if (columnsNames.contains(columnIndices.get(i)))

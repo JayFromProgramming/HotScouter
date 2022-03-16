@@ -192,8 +192,7 @@ public class DataModel
      * Download all of the firebase/tba data based on connection properties, and save it to database
      * @param onCompleteEvent event to run when the tables are populated
      */
-    public static void RefreshTable(Runnable onCompleteEvent)
-    {
+    public static void RefreshTable(Runnable onCompleteEvent) {
         dataLoadEvent.OnBeginProgress();
 
 
@@ -217,7 +216,8 @@ public class DataModel
         model.Download(new OnDownloadResultListener<HashMap<String, Object>>() {
             @Override
             public void onComplete(HashMap<String, Object> stringObjectHashMap) {
-                rawData = new DataTable(model.getResult(), ColumnSchema.CalculatedColumnsRawNames(), ColumnSchema.SumColumns());
+                rawData = new DataTable(model.getResult(), ColumnSchema.CalculatedColumnsRawNames(),
+                        ColumnSchema.SumColumns(), eventName);
 
                 RunCalculations(onCompleteEvent);
             }
@@ -249,7 +249,6 @@ public class DataModel
                         DataCalculator.Calculation.AVERAGE);
                 SetCalculatedDataAverages(avg.GetTable());
                 UpdateIfLoaded(onComplete);
-
                 return null;
             }
         };
@@ -265,7 +264,6 @@ public class DataModel
                         DataCalculator.Calculation.MAXIMUM);
                 SetCalculatedDataMaximums(max.GetTable());
                 UpdateIfLoaded(onComplete);
-
                 return null;
             }
         };
@@ -295,10 +293,9 @@ public class DataModel
      * Update the table if the thread is done and it actually exists
      * @param event event to run if the data is actually loaded, and not null
      */
-    private static synchronized void UpdateIfLoaded(Runnable event)
-    {
-        if (maximums != null && averages != null)
-        {
+    private static synchronized void UpdateIfLoaded(Runnable event) {
+
+        if (maximums != null && averages != null) {
             outputMaximums = maximums;
             outputAverages = averages;
             event.run();
