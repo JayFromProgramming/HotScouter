@@ -44,6 +44,7 @@ public class ColumnSchema {
             JSONObject schema = new JSONObject(schemaRaw);
             JSONArray columns = schema.getJSONArray("calculatedColumns");
             for (int i = 0; i < columns.length(); i++) {
+                if (columns.isNull(i)) continue;
                 JSONObject column = columns.getJSONObject(i);
                 calculatedColumns.add(new CalculatedColumn(column.getString("name"),
                                 column.getString("rawName")));
@@ -61,7 +62,7 @@ public class ColumnSchema {
 //        calculatedColumns.add(new CalculatedColumn("A. U. Cargo", "Auton Upper Cargo")); //Number
 //        calculatedColumns.add(new CalculatedColumn("A. L. Cargo", "Auton Lower Cargo")); //Number
 //        calculatedColumns.add(new CalculatedColumn("Tel. U. Cargo", "Teleop Upper Cargo")); //Number
-//        //calculatedColumns.add(new CalculatedColumn("Tel. L. Cargo", "Teleop Lower Cargo")); //Number
+////        calculatedColumns.add(new CalculatedColumn("Tel. L. Cargo", "Teleop Lower Cargo")); //Number
 //        calculatedColumns.add(new CalculatedColumn("Miss", "Teleop Misses")); //Number
 //        calculatedColumns.add(new CalculatedColumn("Pref. Shot Pos.", "Teleop Preferred Shooting Position")); //Selection
 //        calculatedColumns.add(new CalculatedColumn("Del. Cargo", "Teleop Delivered Cargo")); //Boolean
@@ -82,49 +83,49 @@ public class ColumnSchema {
      * The actual functionality of this list of names is that it determines the order in which these columns appear in raw data
      * @return A list of raw column names which determines the order they appear in the viewer's raw data view
      */
-    public static List<String> PreferredOrder()
-    {
-        return new ArrayList<>(Arrays.asList(
-                "Total Cargo",
-                "Total Upper Cargo", "Total Lower Cargo",
-
-                "Total Upper Cargo",
-                "Auton Upper Cargo", "Teleop Upper Cargo",
-
-                "Total Lower Cargo",
-                "Auton Lower Cargo", "Teleop Lower Cargo",
-
-                "Teleop Misses",
-
-                "Teleop Preferred Shooting Position",
-
-                "Teleop Upper Cargo",
-
-                "Auton Upper Cargo",
-
-                "Endgame Climb Rung",
-
-                "Auton Starting Position",
-
-                "Teleop Lower Cargo",
-
-                "Auton Lower Cargo",
-
-                "Defense Defended Against",
-
-                "Defense Played Defense",
-
-                "Defense Blocked Shots",
-
-                "Defense Effective Seconds",
-
-                "Teleop Delivered Cargo",
-
-                "Auton Cross the Line"
-
-        ));
-
-    }
+//    public static List<String> PreferredOrder()
+//    {
+//        return new ArrayList<>(Arrays.asList(
+//                "Total Cargo",
+//                "Total Upper Cargo", "Total Lower Cargo",
+//
+//                "Total Upper Cargo",
+//                "Auton Upper Cargo", "Teleop Upper Cargo",
+//
+//                "Total Lower Cargo",
+//                "Auton Lower Cargo", "Teleop Lower Cargo",
+//
+//                "Teleop Misses",
+//
+//                "Teleop Preferred Shooting Position",
+//
+//                "Teleop Upper Cargo",
+//
+//                "Auton Upper Cargo",
+//
+//                "Endgame Climb Rung",
+//
+//                "Auton Starting Position",
+//
+//                "Teleop Lower Cargo",
+//
+//                "Auton Lower Cargo",
+//
+//                "Defense Defended Against",
+//
+//                "Defense Played Defense",
+//
+//                "Defense Blocked Shots",
+//
+//                "Defense Effective Seconds",
+//
+//                "Teleop Delivered Cargo",
+//
+//                "Auton Cross the Line"
+//
+//        ));
+//
+//    }
 
     /**
      * List of columns to sum, will add a "raw column" for each match scouted with the new calculated value. You might be

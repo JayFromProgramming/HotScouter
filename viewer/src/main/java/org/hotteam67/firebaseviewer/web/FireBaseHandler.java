@@ -115,6 +115,10 @@ public class FireBaseHandler {
     class RetrieveSchemaTask extends AsyncTask<Void, Void, String> {
 
         protected String doInBackground(Void... nothing) {
+
+            if (FileHandler.Exists(FileHandler.Files.SCHEMA_CACHE_FILE))
+                return "";
+
             try {
                 String finalUrl = fireBaseUrl + "/viewer_schemas/" + schema + ".json" + "?auth=" + fireBaseApiKey;
                 Log.d("HotTeam67", "URL: " + finalUrl);

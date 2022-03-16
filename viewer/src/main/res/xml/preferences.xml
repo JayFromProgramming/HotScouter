@@ -29,5 +29,9 @@
                 android:key="pref_firebaseKeyOverride"
                 android:title="Firebase Event Key Override"
                 android:summary="Bypasses event selector"/>
+            <SwitchPreference
+                android:key="pref_cache_clear"
+                android:title="Clear Cache"
+                android:summary="Toggle to clear cache"/>
 
 </PreferenceScreen>
