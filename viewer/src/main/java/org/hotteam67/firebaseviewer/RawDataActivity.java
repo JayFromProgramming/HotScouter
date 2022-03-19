@@ -76,7 +76,7 @@ public class RawDataActivity extends AppCompatActivity {
             String title = "Match Data For Team " + teamNumber;
             try {
                 if (b.getString(TEAM_NAME_ATTRIBUTE) != null)
-                    title += " - " + b.getString(TEAM_NAME_ATTRIBUTE);
+                    title = teamNumber + " - " + b.getString(TEAM_NAME_ATTRIBUTE);
             } catch (Exception e) {
                 Constants.Log(e);
             }
