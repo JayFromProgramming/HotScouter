@@ -29,7 +29,7 @@ public class DataTable implements Serializable {
 
     public String competition;
 
-    private List<ColumnSchema.SumColumn> sumColumns;
+    private List<SchemaBuilder.SumColumn> sumColumns;
 
     /**
      * Constructor
@@ -40,7 +40,7 @@ public class DataTable implements Serializable {
      *                   do not actulaly exist in the data
      */
     DataTable(HashMap<String, Object> data, List<String> preferredOrder,
-              List<ColumnSchema.SumColumn> sumColumns, String competition) {
+              List<SchemaBuilder.SumColumn> sumColumns, String competition) {
         /*
         Load the Raw Data into model
          */
@@ -74,7 +74,7 @@ public class DataTable implements Serializable {
                     if (data.entrySet().size() > 0) {
                         HashMap<String, String> rowMap = (HashMap<String, String>) row.getValue();
 
-                        for (ColumnSchema.SumColumn sumColumn : sumColumns)
+                        for (SchemaBuilder.SumColumn sumColumn : sumColumns)
                             columnHeaderList.add(new ColumnHeaderModel(sumColumn.columnName));
 
                         for (String column : preferredOrder) {
@@ -127,7 +127,7 @@ public class DataTable implements Serializable {
         List<CellModel> row = cellList.get(yIndex);
 
         // Sum columns first
-        for (ColumnSchema.SumColumn sumColumn : sumColumns) {
+        for (SchemaBuilder.SumColumn sumColumn : sumColumns) {
             int value = 0;
             for (String columnToSum : sumColumn.columnsNames)
             {
@@ -150,7 +150,7 @@ public class DataTable implements Serializable {
         for (ColumnHeaderModel model : columnHeaderList) {
             if (!rowMap.containsKey(model.getData())) {
                 boolean contained = false;
-                for (ColumnSchema.SumColumn c : sumColumns) {
+                for (SchemaBuilder.SumColumn c : sumColumns) {
                     if (c.columnName.equals(model.getData()))
                         contained = true;
                 }

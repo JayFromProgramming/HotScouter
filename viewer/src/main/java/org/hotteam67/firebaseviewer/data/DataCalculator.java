@@ -76,7 +76,7 @@ class DataCalculator implements Serializable {
 *                  the calculated data
      * @param calculationType the type of calculation to do, Max/Min/Avg
      */
-    DataCalculator(DataTable rawData, List<ColumnSchema.CalculatedColumn> calculatedColumns,
+    DataCalculator(DataTable rawData, List<SchemaBuilder.CalculatedColumn> calculatedColumns,
                    List<String> columnIndices,
                    JSONObject teamRanks, JSONObject teamNames,
                    int calculationType) {
@@ -99,7 +99,7 @@ class DataCalculator implements Serializable {
         }
         this.calculationType = calculationType;
         List<String> tempList = new ArrayList<>();
-        for (ColumnSchema.CalculatedColumn column: calculatedColumns)
+        for (SchemaBuilder.CalculatedColumn column: calculatedColumns)
             tempList.add(column.Name);
 
         SetupCalculatedColumns(tempList);

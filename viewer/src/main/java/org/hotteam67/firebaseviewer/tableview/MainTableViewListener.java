@@ -10,7 +10,7 @@ import com.evrencoskun.tableview.listener.ITableViewListener;
 import com.evrencoskun.tableview.sort.SortState;
 import org.hotteam67.firebaseviewer.ViewerActivity;
 import org.hotteam67.firebaseviewer.RawDataActivity;
-import org.hotteam67.firebaseviewer.data.ColumnSchema;
+import org.hotteam67.firebaseviewer.data.SchemaBuilder;
 import org.hotteam67.firebaseviewer.data.DataModel;
 import org.hotteam67.firebaseviewer.data.ScatterPlot;
 import org.hotteam67.firebaseviewer.data.DataTable;
@@ -83,7 +83,7 @@ public class MainTableViewListener implements ITableViewListener {
             table = Sort.BubbleSortAscendingByRowHeader(table);
 
             // -1 to account for ranking column. HACK btw
-            String rawColumnName = ColumnSchema.CalculatedColumnsRawNames().get(column - 1);
+            String rawColumnName = SchemaBuilder.CalculatedColumnsRawNames().get(column - 1);
 
             // Find the x value in the raw data table
             int index = -1;

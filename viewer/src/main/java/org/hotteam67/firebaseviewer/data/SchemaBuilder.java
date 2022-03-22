@@ -28,7 +28,7 @@ import java.util.function.Function;
  * If the raw name is from the schema it has the most recent header first, such as "Teleop Hatch Panels".
  * If the raw name is from SumColumns(), you obviously need to add a SumColumns() entry, then you can use calculated columns on that
  */
-public class ColumnSchema {
+public class SchemaBuilder {
 
     /**
      * The calculated columns desired names, first argument is name as it appears in the viewer, second is the raw name

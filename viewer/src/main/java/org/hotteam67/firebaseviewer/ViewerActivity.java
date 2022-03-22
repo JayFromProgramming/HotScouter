@@ -28,6 +28,7 @@ import com.evrencoskun.tableview.TableView;
 import com.evrencoskun.tableview.sort.SortState;
 
 import org.hotteam67.common.FileHandler;
+import org.hotteam67.common.ExceptionHandler;
 import org.hotteam67.firebaseviewer.data.DataModel;
 import org.hotteam67.firebaseviewer.data.MultiFilter;
 import org.hotteam67.firebaseviewer.tableview.MainTableAdapter;
@@ -79,10 +80,8 @@ public class ViewerActivity extends AppCompatActivity {
      * @param data the other data attached to the intent
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == Constants.RawDataRequestCode)
-        {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.RawDataRequestCode) {
             if (data == null) return;
             try {
                 Integer result = data.getIntExtra("Match Number", 0);
@@ -106,6 +105,8 @@ public class ViewerActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
 
         setContentView(R.layout.activity_main);
         ActionBar bar = getSupportActionBar();

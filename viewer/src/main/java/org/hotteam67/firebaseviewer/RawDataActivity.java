@@ -14,6 +14,7 @@ import com.evrencoskun.tableview.TableView;
 import com.evrencoskun.tableview.sort.SortState;
 
 import org.hotteam67.common.Constants;
+import org.hotteam67.common.ExceptionHandler;
 import org.hotteam67.firebaseviewer.data.DataTable;
 import org.hotteam67.firebaseviewer.tableview.MainTableAdapter;
 import org.hotteam67.firebaseviewer.tableview.MainTableViewListener;
@@ -52,9 +53,11 @@ public class RawDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_raw_data);
 
+        Thread currentThread = Thread.currentThread();
+        currentThread.setUncaughtExceptionHandler(new ExceptionHandler(this));
+
         ActionBar bar = getSupportActionBar();
-        if (bar != null)
-        {
+        if (bar != null) {
             View finalView = getLayoutInflater().inflate(R.layout.actionbar_raw, null);
             finalView.setLayoutParams(new ActionBar.LayoutParams(
                     ActionBar.LayoutParams.MATCH_PARENT,
@@ -69,11 +72,11 @@ public class RawDataActivity extends AppCompatActivity {
         backButton.setOnClickListener(v -> finish());
 
         Bundle b = getIntent().getExtras();
-        if (b != null)
-        {
+        if (b != null) {
             dataTable = (DataTable) b.getSerializable(RAW_DATA_ATTRIBUTE);
             String teamNumber = b.getString(TEAM_NUMBER_ATTRIBUTE);
             String title = "Match Data For Team " + teamNumber;
+//            throw new RuntimeException("Team name not implemented yet");
             try {
                 if (b.getString(TEAM_NAME_ATTRIBUTE) != null)
                     title = teamNumber + " - " + b.getString(TEAM_NAME_ATTRIBUTE);

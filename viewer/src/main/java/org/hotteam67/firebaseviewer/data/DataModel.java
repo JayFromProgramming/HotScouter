@@ -15,7 +15,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -218,8 +217,8 @@ public class DataModel
         model.Download(new OnDownloadResultListener<HashMap<String, Object>>() {
             @Override
             public void onComplete(HashMap<String, Object> stringObjectHashMap) {
-                rawData = new DataTable(model.getResult(), ColumnSchema.CalculatedColumnsRawNames(),
-                        ColumnSchema.SumColumns(), eventName);
+                rawData = new DataTable(model.getResult(), SchemaBuilder.CalculatedColumnsRawNames(),
+                        SchemaBuilder.SumColumns(), eventName);
 
                 RunCalculations(onCompleteEvent);
             }
@@ -244,8 +243,8 @@ public class DataModel
             protected Object doInBackground(Object[] objects) {
                 DataCalculator avg = new DataCalculator(
                         rawData,
-                        ColumnSchema.CalculatedColumns(),
-                        ColumnSchema.CalculatedColumnsRawNames(),
+                        SchemaBuilder.CalculatedColumns(),
+                        SchemaBuilder.CalculatedColumnsRawNames(),
                         teamNumbersRanks,
                         teamNumbersNames,
                         DataCalculator.Calculation.AVERAGE);
@@ -259,8 +258,8 @@ public class DataModel
             protected Object doInBackground(Object[] objects) {
                 DataCalculator max = new DataCalculator(
                         rawData,
-                        ColumnSchema.CalculatedColumns(),
-                        ColumnSchema.CalculatedColumnsRawNames(),
+                        SchemaBuilder.CalculatedColumns(),
+                        SchemaBuilder.CalculatedColumnsRawNames(),
                         teamNumbersRanks,
                         teamNumbersNames,
                         DataCalculator.Calculation.MAXIMUM);
